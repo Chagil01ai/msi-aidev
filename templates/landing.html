@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MSI AI Dev - Landing</title>
+</head>
+<body>
+  <h1>Welcome to MSI AI Dev</h1>
+  <p><a href="/chat">👉 Chat with Claude</a></p>
+  <p><a href="/summarize">📄 PDF Summarizer</a></p>
+</body>
+<form action="/upload_pdf" method="post" enctype="multipart/form-data">
+  <label>Select PDF to index for RAG:</label>
+  <input type="file" name="file" required>
+  <button type="submit">Upload & Index</button>
+</form>
+</html>

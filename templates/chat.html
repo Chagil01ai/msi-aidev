@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat with Claude</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container my-5">
+    <h1 class="text-center mb-4">Chat with Claude 🤖</h1>
+
+    <div id="chat-box" class="border rounded p-3 bg-white" style="height: 60vh; overflow-y: scroll;">
+      <!-- Messages appear here -->
+    </div>
+
+    <div class="mt-3 d-flex">
+      <input id="user-input" class="form-control me-2" placeholder="Ask Claude something...">
+      <button id="send-btn" class="btn btn-primary">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    function addMessage(role, content) {
+      const msg = document.createElement("div");
+      msg.classList.add("mb-2", "p-2", "rounded");
+      if (role === "user") {
+        msg.classList.add("bg-primary", "text-white", "text-end");
+      } else {
+        msg.classList.add("bg-success", "text-white", "text-start");
+      }
+      msg.innerHTML = content;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    sendBtn.onclick = async () => {
+      const text = userInput.value;
+      if (!text) return;
+      addMessage("user", text);
+      userInput.value = "";
+
+      const sessionId = "{{ session['session_id'] }}";
+
+      const response = await fetch("/ask_claude", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: text, session_id: sessionId})
+      });
+
+      const reader = response.body.getReader();
+      let assistantReply = "";
+      const decoder = new TextDecoder();
+
+      const thinking = document.createElement("div");
+      thinking.className = "mb-2 p-2 rounded bg-success text-white text-start";
+      thinking.textContent = "Claude is thinking...";
+      chatBox.appendChild(thinking);
+
+      while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        assistantReply += chunk;
+        thinking.textContent = assistantReply;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    };
+  </script>
+
+</body>
+</html>

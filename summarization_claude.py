@@ -82,7 +82,5 @@ def basic_summarize(text, max_tokens=1000):
 
     return response.content[0].text
 
-basic_response = basic_summarize(text, max_tokens=1000)
 
-print(basic_response)
 

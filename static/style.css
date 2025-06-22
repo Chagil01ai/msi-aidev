@@ -1,0 +1,26 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+}
+
+#chatBox {
+  border: 1px solid #ccc;
+  padding: 15px;
+  height: 400px;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+}
+
+.user {
+  color: blue;
+}
+
+.assistant {
+  color: green;
+}
+
+#spinner {
+  font-style: italic;
+  margin-bottom: 10px;
+}
